@@ -1,0 +1,147 @@
+<?xml version="1.0" ?>
+<rmdb version="1.0" toprunnables="directed">
+  <!-- ============== -->
+  <!-- DIRECTED TESTS -->
+  <!-- ============== -->
+  <runnable name="directed" type="group">
+    <parameters>
+        <parameter name="ucdbfile">../(%INSTANCE%).ucdb</parameter>
+    </parameters>
+    <members>
+      <member>dirtest_0_0</member>
+      <member>dirtest_1_0</member>
+      <member>dirtest_10_0</member>
+      <member>dirtest_11_0</member>
+      <member>dirtest_12_0</member>
+      <member>dirtest_13_0</member>
+      <member>dirtest_14_0</member>
+      <member>dirtest_15_0</member>
+      <member>dirtest_16_0</member>
+      <member>dirtest_17_0</member>
+      <member>dirtest_18_0</member>
+      <member>dirtest_19_0</member>
+      <member>dirtest_20_0</member>
+      <member>dirtest_21_0</member>
+      <member>dirtest_22_0</member>
+      <member>dirtest_23_0</member>
+    </members>
+
+    <execScript>
+      <command>file delete -force work</command>
+      <command>set Path_DUV     "(%RMDBDIR%)/src_vhdl"</command>
+      <command>set Path_TB       "(%RMDBDIR%)/src_tb"</command>
+      <command>global Path_DUV</command>
+      <command>global Path_TB</command>
+      <command>vlib work</command>
+      <command>vcom -2008 -mixedsvvh $Path_DUV/packet_analyzer_pkg.vhd</command>
+      <command>vcom -2008 -mixedsvvh $Path_DUV/packet_analyzer.vhd</command>
+      <command>vlog -mixedsvvh -sv $Path_TB/packet_analyzer_tb.sv</command>
+      <command>vsim -t 10ps -GERRNO=(%errno%) -GTESTCASE=(%testcase%) work.packet_analyzer_tb</command>
+      <command>set StdArithNoWarnings 1</command>
+      <command>set NumericStdNoWarnings 1</command>
+      <command>run 2 ns</command>
+      <command>set StdArithNoWarnings 0</command>
+      <command>set NumericStdNoWarnings 0</command>
+      <command>run -all</command>
+      <command>coverage attribute -name ERRNO -value (%INSTANCE%)</command>
+      <command>coverage save (%ucdbfile%)</command>
+    </execScript>
+  </runnable>
+  <runnable name="dirtest_0_0" type="task">
+    <parameters>
+      <parameter name="testcase">0</parameter>
+      <parameter name="errno">0</parameter>
+    </parameters>
+  </runnable>
+  <runnable name="dirtest_1_0" type="task">
+    <parameters>
+      <parameter name="testcase">0</parameter>
+      <parameter name="errno">1</parameter>
+    </parameters>
+  </runnable>
+  <runnable name="dirtest_10_0" type="task">
+    <parameters>
+      <parameter name="testcase">0</parameter>
+      <parameter name="errno">10</parameter>
+    </parameters>
+  </runnable>
+  <runnable name="dirtest_11_0" type="task">
+    <parameters>
+      <parameter name="testcase">0</parameter>
+      <parameter name="errno">11</parameter>
+    </parameters>
+  </runnable>
+  <runnable name="dirtest_12_0" type="task">
+    <parameters>
+      <parameter name="testcase">0</parameter>
+      <parameter name="errno">12</parameter>
+    </parameters>
+  </runnable>
+  <runnable name="dirtest_13_0" type="task">
+    <parameters>
+      <parameter name="testcase">0</parameter>
+      <parameter name="errno">13</parameter>
+    </parameters>
+  </runnable>
+  <runnable name="dirtest_14_0" type="task">
+    <parameters>
+      <parameter name="testcase">0</parameter>
+      <parameter name="errno">14</parameter>
+    </parameters>
+  </runnable>
+  <runnable name="dirtest_15_0" type="task">
+    <parameters>
+      <parameter name="testcase">0</parameter>
+      <parameter name="errno">15</parameter>
+    </parameters>
+  </runnable>
+  <runnable name="dirtest_16_0" type="task">
+    <parameters>
+      <parameter name="testcase">0</parameter>
+      <parameter name="errno">16</parameter>
+    </parameters>
+  </runnable>
+  <runnable name="dirtest_17_0" type="task">
+    <parameters>
+      <parameter name="testcase">0</parameter>
+      <parameter name="errno">17</parameter>
+    </parameters>
+  </runnable>
+  <runnable name="dirtest_18_0" type="task">
+    <parameters>
+      <parameter name="testcase">0</parameter>
+      <parameter name="errno">18</parameter>
+    </parameters>
+  </runnable>
+  <runnable name="dirtest_19_0" type="task">
+    <parameters>
+      <parameter name="testcase">0</parameter>
+      <parameter name="errno">19</parameter>
+    </parameters>
+  </runnable>
+  <runnable name="dirtest_20_0" type="task">
+    <parameters>
+      <parameter name="testcase">0</parameter>
+      <parameter name="errno">20</parameter>
+    </parameters>
+  </runnable>
+  <runnable name="dirtest_21_0" type="task">
+    <parameters>
+      <parameter name="testcase">0</parameter>
+      <parameter name="errno">21</parameter>
+    </parameters>
+  </runnable>
+  <runnable name="dirtest_22_0" type="task">
+    <parameters>
+      <parameter name="testcase">0</parameter>
+      <parameter name="errno">22</parameter>
+    </parameters>
+  </runnable>
+  <runnable name="dirtest_23_0" type="task">
+    <parameters>
+      <parameter name="testcase">0</parameter>
+      <parameter name="errno">23</parameter>
+    </parameters>
+  </runnable>
+
+</rmdb>
