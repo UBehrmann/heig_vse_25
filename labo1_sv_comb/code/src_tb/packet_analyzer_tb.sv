@@ -119,6 +119,24 @@ module packet_analyzer_tb#(int TESTCASE, int ERRNO);
     parameter int header_size = 6 * 8;
 
     class Packet;
+        // 0-2 : type 1, 2 ou 5 sinon erreur_o[1] = 1
+        // longueur
+        // type 1 : 8-15 
+        // type 2 : 10-15 
+        // type 5 : 12-15
+        // 16-31 : source
+        // 32-47 : destination 
+        // source et destination doivent etre dans des ranges Group0 et Group1
+        // Si source est hors des ranges erreur_o[2] = 1
+        // Si destination est hors des ranges erreur_o[3] = 1
+        // Si les deux sont valide, mais pas dans le meme groupe erreur_o[4] = 1
+        // CRC
+        // Type 1 : 8 bits
+        // Type 2 et 5 : 16 bits
+        // Si CRC incorrecte erreur_o[0] = 1
+
+
+
     endclass
 
     task play(Packet p);
