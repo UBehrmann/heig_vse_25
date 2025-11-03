@@ -12,6 +12,7 @@ git merge origin/main
 
 ```bash
 vsim -c -do "run -all" work.tb_analyseur_paquets
+vsim -do "do sim.do all 0 0"
 ```
 
 ## Run vrun

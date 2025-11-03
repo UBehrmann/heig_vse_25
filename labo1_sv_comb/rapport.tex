@@ -77,7 +77,7 @@
         \textbf{Assistant :}     & \textbf{Clément Dieperink} \\
         \textbf{Classe :}        & \textbf{VSE} \\
         \textbf{Salle de labo :} & \textbf{A07} \\
-        \textbf{Date :}          & \textbf{08.10.25} \\
+        \textbf{Date :}          & \textbf{03.11.25} \\
     \end{tabular}
 \end{flushleft}
 
@@ -90,9 +90,223 @@
 
 \newpage
 
-\section{1ère section}
+\section{Introduction}
 
+Ce rapport présente les choix effectués lors du développement du testbench SystemVerilog \texttt{packet\_analyzer\_tb.sv}, utilisé pour vérifier le composant VHDL \texttt{packet\_analyzer}. Le testbench a pour but de générer des paquets de test, de calculer les résultats attendus, et de vérifier que le composant fonctionne correctement en comparant ses sorties avec les valeurs de référence.
 
+\section{Architecture du testbench}
 
+Le testbench est organisé en trois parties principales qui tournent en parallèle :
+
+\subsection{Génération des stimuli}
+La tâche \texttt{generator} crée les paquets de test. On a utilisé une classe \texttt{Packet} avec des contraintes aléatoires (randomisation) pour générer automatiquement différents types de paquets. Cette approche est beaucoup plus efficace que de coder manuellement chaque test.
+
+\subsection{Modèle de référence}
+La tâche \texttt{compute\_reference} calcule ce que le DUV devrait produire comme résultat. Elle analyse le paquet envoyé et détermine :
+\begin{itemize}
+    \item Le type du paquet (valide ou non)
+    \item La longueur des données
+    \item Les erreurs détectées (CRC, type, adresses, groupe)
+\end{itemize}
+
+Ce modèle tourne en continu et calcule la référence à chaque cycle d'horloge.
+
+\subsection{Vérification}
+La tâche \texttt{verification} compare les sorties du DUV avec les valeurs calculées par le modèle de référence. Elle utilise des assertions SystemVerilog pour détecter les différences et compte le nombre d'erreurs.
+
+\break
+
+\section{Choix techniques et justifications}
+
+\subsection{Classe Packet avec contraintes}
+La classe \texttt{Packet} utilise les fonctionnalités de randomisation de SystemVerilog. Les contraintes définissent :
+\begin{itemize}
+    \item Les types valides (1, 2, 5) et invalides (0, 3, 4, 6, 7)
+    \item Les longueurs selon le type de paquet
+    \item Les adresses sources et destinations (valides dans les groupes 0 et 1, ou invalides)
+    \item La possibilité de forcer des erreurs CRC (20\% du temps)
+\end{itemize}
+
+Ce système permet de générer automatiquement des milliers de tests différents sans avoir à les écrire manuellement. Le choix d'utiliser la randomisation contrainte plutôt que des boucles manuelles vient du fait qu'on peut explorer beaucoup plus de cas en moins de temps. En définissant des distributions (par exemple 80\% d'adresses valides, 20\% invalides), on s'assure de tester les cas normaux majoritairement tout en incluant assez de cas d'erreur pour les détecter.
+
+De plus, la randomisation aide à trouver des bugs qu'on n'aurait pas imaginés. Quand on écrit des tests manuellement, on teste ce qu'on pense être important, mais on rate souvent des combinaisons subtiles. La génération aléatoire peut créer des séquences inattendues qui révèlent des problèmes.
+
+\subsection{Vérification par assertions}
+Au lieu d'utiliser des \texttt{if} avec des \texttt{\$display}, on a utilisé des assertions SystemVerilog :
+\begin{itemize}
+    \item \texttt{assert\_error} : vérifie les 5 bits d'erreur [4:0]
+    \item \texttt{assert\_type} : vérifie le type détecté
+    \item \texttt{assert\_length} : vérifie la longueur calculée
+\end{itemize}
+
+Les assertions sont plus claires et permettent aux outils de simulation de mieux identifier les problèmes. On compare uniquement les bits \texttt{error[4:0]} car les bits supérieurs ne sont pas utilisés dans notre implémentation.
+
+Le choix des assertions plutôt que des \texttt{if} simples a plusieurs avantages : premièrement, les assertions ont des noms explicites qui apparaissent directement dans les logs d'erreur (on sait immédiatement si c'est l'erreur, le type ou la longueur qui pose problème). Deuxièmement, les outils de simulation peuvent générer des rapports d'assertions automatiques, ce qui facilite le débogage. Enfin, c'est la méthode standard dans l'industrie pour la vérification, donc c'est une bonne pratique à adopter.
+
+\subsection{Synchronisation posedge/negedge}
+Le testbench utilise une synchronisation importante : la génération et le calcul de référence se font sur le \texttt{posedge} de l'horloge, mais la vérification se fait sur le \texttt{negedge}. Pourquoi ?
+
+Parce que le DUV est combinatoire : il faut lui laisser le temps de propager les signaux. Si on vérifie trop tôt (sur le même front montant), on risque de lire des valeurs qui ne sont pas encore stabilisées. Le décalage d'une demi-période évite ce problème.
+
+\subsection{Utilisation d'un program}
+On a mis la logique principale dans un bloc \texttt{program} au lieu d'un simple \texttt{initial}. Le \texttt{program} garantit que notre code de test s'exécute dans la bonne région temporelle (testbench scheduling region), ce qui évite les courses avec le DUV.
+
+\break
+
+\section{Stratégie de tests}
+
+On a combiné deux approches :
+
+\subsection{Tests dirigés (directed tests)}
+Six tests spécifiques qui ciblent des scénarios particuliers :
+\begin{enumerate}
+    \item \texttt{test\_invalid\_types} : teste tous les types invalides
+    \item \texttt{test\_crc\_errors} : force des erreurs CRC sur des paquets valides
+    \item \texttt{test\_source\_errors} : teste des adresses sources hors des groupes
+    \item \texttt{test\_destination\_errors} : teste des adresses destination invalides
+    \item \texttt{test\_group\_mismatch} : teste source et destination dans des groupes différents
+    \item \texttt{test\_multiple\_errors} : combine plusieurs types d'erreurs
+\end{enumerate}
+
+Chaque test génère 100 paquets avec des contraintes spécifiques. Ces tests garantissent qu'on couvre bien tous les cas de base.
+
+Le choix de faire des tests dirigés d'abord est important : on veut s'assurer que chaque type d'erreur est bien détecté individuellement avant de lancer des tests aléatoires. Si on détecte un problème dans un test dirigé, on sait exactement quelle fonctionnalité est cassée. De plus, 100 paquets par test est un bon compromis : assez pour avoir confiance que ça marche, mais pas trop pour garder des temps de simulation raisonnables.
+
+\subsection{Tests aléatoires guidés par la couverture}
+Après les tests dirigés, \texttt{test\_random\_coverage} génère des paquets complètement aléatoires jusqu'à atteindre 99\% de couverture fonctionnelle (ou 10000 paquets maximum). Cette approche permet de découvrir des combinaisons qu'on n'aurait pas pensé à tester manuellement.
+
+L'objectif a été fixé à 99\% plutôt que 100\% car, bien qu'il soit possible d'atteindre 100\%, cela ne semble pas réaliste dans un contexte réel de vérification. Il reste toujours quelques bins difficiles à atteindre aléatoirement et 99\% représente déjà une excellente couverture.
+
+\break
+
+\section{Couverture fonctionnelle}
+
+On a défini un \texttt{covergroup} qui mesure :
+
+\subsection{Coverpoints de base}
+\begin{itemize}
+    \item \texttt{cp\_type} : types valides vs invalides
+    \item \texttt{cp\_length} : longueurs petites/moyennes/grandes
+    \item \texttt{cp\_error\_crc}, \texttt{cp\_error\_type}, etc. : chaque bit d'erreur
+    \item \texttt{cp\_source\_addr}, \texttt{cp\_dest\_addr} : adresses aux frontières des groupes
+\end{itemize}
+
+\subsection{Crosses (croisements)}
+\begin{itemize}
+    \item \texttt{cr\_type\_error} : croisement type × erreur de type
+    \item \texttt{cr\_errors} : croisement de tous les bits d'erreur
+    \item \texttt{cr\_address\_groups} : croisement des groupes source × destination
+\end{itemize}
+
+\subsection{Ignore bins}
+On a utilisé \texttt{ignore\_bins} pour exclure les combinaisons impossibles :
+\begin{itemize}
+    \item Type valide avec erreur de type (impossible par définition)
+    \item Erreur CRC sur un type invalide (le CRC n'est pas vérifié)
+    \item Erreur de groupe avec source ou destination invalide
+\end{itemize}
+
+Cela donne un pourcentage de couverture réaliste qui ne compte que les bins atteignables.
+
+Le choix d'utiliser \texttt{ignore\_bins} est crucial pour avoir une métrique de couverture honnête. Sans ces exclusions, on aurait un pourcentage de couverture qui inclut des bins qu'on ne peut jamais atteindre, ce qui donnerait une fausse impression de qualité insuffisante. Par exemple, le DUV ne vérifie pas le CRC quand le type est invalide, donc il est logiquement impossible d'avoir à la fois "type invalide" et "erreur CRC". En excluant ces combinaisons, on mesure vraiment ce qui est testable, pas ce qui est théoriquement possible.
+
+\subsection{Tests de frontières}
+On teste spécifiquement les adresses aux limites des groupes (début, fin, juste avant, juste après) car c'est là qu'on trouve souvent des bugs de comparaison (erreurs de type "off-by-one").
+
+Cette décision vient de l'expérience : les bugs de comparaison (utiliser \texttt{<} au lieu de \texttt{<=}, ou se tromper d'un dans une limite) sont très fréquents. En testant explicitement les valeurs aux frontières, on augmente beaucoup les chances de les détecter. Par exemple, si le groupe 0 va de 100 à 199, on teste spécifiquement 100, 101, 198, 199, et aussi 99 et 200 pour vérifier qu'ils sont bien rejetés.
+
+\break
+
+\section{Décisions d'implémentation}
+
+\subsection{Paramètre TESTCASE}
+Le testbench accepte un paramètre \texttt{TESTCASE} qui permet de choisir quels tests exécuter :
+\begin{itemize}
+    \item \texttt{TESTCASE = 0} : exécute tous les tests (1 à 7) en séquence
+    \item \texttt{TESTCASE = 1-7} : exécute uniquement le test spécifié
+\end{itemize}
+
+Cette flexibilité est utile pour déboguer un test spécifique sans avoir à attendre l'exécution complète de tous les autres. Pendant le développement, on peut isoler un test qui pose problème, et pour la validation finale, on lance tous les tests ensemble.
+
+\subsection{Logs minimaux}
+On a désactivé l'affichage détaillé de chaque paquet testé car ça génère des milliers de lignes inutiles. On garde seulement :
+\begin{itemize}
+    \item Les messages de début/fin de chaque test
+    \item Les erreurs détectées
+    \item La progression tous les 1000 paquets dans la phase aléatoire
+    \item Le résumé final (nombre de tests, erreurs, couverture)
+\end{itemize}
+
+Cette décision vient d'une contrainte pratique : avec des logs détaillés pour chaque paquet, un test de 10000 paquets génère un fichier de plusieurs mégaoctets, ce qui ralentit la simulation et rend le transcript illisible. En gardant uniquement les informations importantes (début/fin de test, erreurs, progression), on obtient un transcript clair où on voit immédiatement s'il y a des problèmes, sans être noyé dans les détails. Les logs de progression tous les 1000 paquets permettent de suivre l'avancement sans surcharger l'affichage.
+
+\break
+
+\section{Conclusion}
+
+Les principaux choix du testbench sont :
+\begin{itemize}
+    \item \textbf{Randomisation contrainte} : génération automatique de milliers de tests variés
+    \item \textbf{Assertions} : vérification claire et automatique des résultats
+    \item \textbf{Couverture fonctionnelle} : mesure objective de la qualité des tests
+    \item \textbf{Mix dirigé/aléatoire} : garantit la couverture des cas importants tout en explorant largement
+    \item \textbf{Synchronisation soignée} : évite les races conditions sur un design combinatoire
+\end{itemize}
+
+Cette approche permet de tester efficacement le composant avec un bon niveau de confiance dans les résultats.
+
+\section{Note sur l'utilisation d'outils IA}
+
+ChatGPT a été utilisé pour corriger l'orthographe et la grammaire de ce document.
+
+\newpage
+
+\appendix
+
+\section{Exemple d'exécution}
+
+Voici un exemple de sortie de simulation lors de l'exécution complète des tests :
+
+\begin{verbatim}
+# packet_analyzer_tb: INFO: (@ 0) ========================================
+# packet_analyzer_tb: INFO: (@ 0) Starting Packet Analyzer Verification
+# packet_analyzer_tb: INFO: (@ 0) ========================================
+# packet_analyzer_tb: INFO: (@ 0) TESTCASE: 0, ERRNO: 1
+# packet_analyzer_tb: INFO: (@ 0) ========================================
+# packet_analyzer_tb: INFO: (@ 5) ========================================
+# packet_analyzer_tb: INFO: (@ 5) Running ALL test cases
+# packet_analyzer_tb: INFO: (@ 5) ========================================
+# packet_analyzer_tb: INFO: (@ 5) === Test Case 1: Invalid Type Packets ===
+# packet_analyzer_tb: INFO: (@ 1005) === Test Case 1 Complete ===
+# packet_analyzer_tb: INFO: (@ 1005) === Test Case 2: CRC Error Packets ===
+# packet_analyzer_tb: INFO: (@ 2005) === Test Case 2 Complete ===
+# packet_analyzer_tb: INFO: (@ 2005) === Test Case 3: Invalid Source Address ===
+# packet_analyzer_tb: INFO: (@ 3005) === Test Case 3 Complete ===
+# packet_analyzer_tb: INFO: (@ 3005) === Test Case 4: Invalid Destination Address ===
+# packet_analyzer_tb: INFO: (@ 4005) === Test Case 4 Complete ===
+# packet_analyzer_tb: INFO: (@ 4005) === Test Case 5: Group Mismatch (different groups) ===
+# packet_analyzer_tb: INFO: (@ 5005) === Test Case 5 Complete ===
+# packet_analyzer_tb: INFO: (@ 5005) === Test Case 6: Multiple Simultaneous Errors ===
+# packet_analyzer_tb: INFO: (@ 6005) === Test Case 6 Complete ===
+# packet_analyzer_tb: INFO: (@ 6005) === Test Case 7: Random Coverage-Driven Testing ===
+# packet_analyzer_tb: INFO: (@ 8415) === Test Case 7 Complete ===
+# packet_analyzer_tb: INFO: (@ 8525) ========================================
+# packet_analyzer_tb: INFO: (@ 8525) Simulation Complete
+# packet_analyzer_tb: INFO: (@ 8525) ========================================
+# packet_analyzer_tb: INFO: (@ 8525) Total tests executed: 852
+# packet_analyzer_tb: INFO: (@ 8525) Total errors detected: 0
+# packet_analyzer_tb: INFO: (@ 8525) Functional coverage: 99.52%
+# packet_analyzer_tb: INFO: (@ 8525) ========================================
+# packet_analyzer_tb: INFO: (@ 8525) *** TEST PASSED ***
+# packet_analyzer_tb: INFO: (@ 8525) ========================================
+\end{verbatim}
+
+On voit clairement :
+\begin{itemize}
+    \item L'exécution séquentielle des 7 tests
+    \item Le nombre total de tests : 852 (600 dirigés + 241 aléatoires pour atteindre 99\%)
+    \item Aucune erreur détectée (0 erreurs)
+    \item Couverture finale de 99.52\%
+    \item Le test est passé avec succès
+\end{itemize}
 
 \end{document}
