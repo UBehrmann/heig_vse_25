@@ -309,4 +309,98 @@ On voit clairement :
     \item Le test est passé avec succès
 \end{itemize}
 
+\break
+
+\section{Exécution avec vrun}
+
+Voici la sortie de l'exécution des tests dirigés avec Questa Verification Run Manager (vrun) :
+
+\begin{verbatim}
+reds@vmeda2026:/media/sf_vmShare/vse25_student/labo1_sv_comb/code$ vrun directed
+// Questa Verification Run Manager 2020.1_1 Mar  4 2020 
+//
+//  Copyright 1991-2020 Mentor Graphics Corporation
+//  All Rights Reserved.
+//
+//  Questa Verification Run Manager and its associated documentation contain trade
+//  secrets and commercial or financial information that are the property of
+//  Mentor Graphics Corporation and are privileged, confidential,
+//  and exempt from disclosure under the Freedom of Information Act,
+//  5 U.S.C. Section 552. Furthermore, this information
+//  is prohibited from disclosure under the Trade Secrets Act,
+//  18 U.S.C. Section 1905.
+//
+Run Monitor daemon listening on '38493@vmeda2026'...
+RegressionStarting: Regression started at Tue Nov  4 16:05:34 2025
+ActionStarted:   Action 'directed/dirtest_10_0/execScript' has started at Tue Nov  4 16:05:37 2025
+ActionStarted:   Action 'directed/dirtest_0_0/execScript' has started at Tue Nov  4 16:05:37 2025
+ActionStarted:   Action 'directed/dirtest_13_0/execScript' has started at Tue Nov  4 16:05:38 2025
+ActionStarted:   Action 'directed/dirtest_1_0/execScript' has started at Tue Nov  4 16:05:38 2025
+ActionStarted:   Action 'directed/dirtest_11_0/execScript' has started at Tue Nov  4 16:05:38 2025
+ActionStarted:   Action 'directed/dirtest_12_0/execScript' has started at Tue Nov  4 16:05:38 2025
+ActionStarted:   Action 'directed/dirtest_14_0/execScript' has started at Tue Nov  4 16:05:38 2025
+ActionStarted:   Action 'directed/dirtest_18_0/execScript' has started at Tue Nov  4 16:05:38 2025
+ActionStarted:   Action 'directed/dirtest_16_0/execScript' has started at Tue Nov  4 16:05:38 2025
+ActionStarted:   Action 'directed/dirtest_15_0/execScript' has started at Tue Nov  4 16:05:38 2025
+ActionStarted:   Action 'directed/dirtest_19_0/execScript' has started at Tue Nov  4 16:05:39 2025
+ActionStarted:   Action 'directed/dirtest_17_0/execScript' has started at Tue Nov  4 16:05:39 2025
+ActionStarted:   Action 'directed/dirtest_22_0/execScript' has started at Tue Nov  4 16:05:39 2025
+ActionStarted:   Action 'directed/dirtest_20_0/execScript' has started at Tue Nov  4 16:05:39 2025
+ActionStarted:   Action 'directed/dirtest_21_0/execScript' has started at Tue Nov  4 16:05:39 2025
+ActionStarted:   Action 'directed/dirtest_23_0/execScript' has started at Tue Nov  4 16:05:39 2025
+ActionCompleted: Action 'directed/dirtest_0_0/execScript' passed at Tue Nov  4 16:05:44 2025
+ActionCompleted: Action 'directed/dirtest_1_0/execScript' passed at Tue Nov  4 16:05:44 2025
+ActionCompleted: Action 'directed/dirtest_10_0/execScript' passed at Tue Nov  4 16:05:44 2025
+Error: Action 'directed/dirtest_13_0/execScript' failed (failed/error):
+  details: UCDB status is 'Error'
+  logfile: /media/sf_vmShare/vse25_student/labo1_sv_comb/code/VRMDATA/
+           directed/dirtest_13_0/execScript.log
+ActionCompleted: Action 'directed/dirtest_13_0/execScript' failed at Tue Nov  4 16:05:45 2025
+ActionCompleted: Action 'directed/dirtest_11_0/execScript' passed at Tue Nov  4 16:05:45 2025
+ActionCompleted: Action 'directed/dirtest_12_0/execScript' passed at Tue Nov  4 16:05:45 2025
+ActionCompleted: Action 'directed/dirtest_14_0/execScript' passed at Tue Nov  4 16:05:45 2025
+ActionCompleted: Action 'directed/dirtest_23_0/execScript' passed at Tue Nov  4 16:05:45 2025
+ActionCompleted: Action 'directed/dirtest_15_0/execScript' passed at Tue Nov  4 16:05:49 2025
+ActionCompleted: Action 'directed/dirtest_17_0/execScript' passed at Tue Nov  4 16:05:49 2025
+ActionCompleted: Action 'directed/dirtest_18_0/execScript' passed at Tue Nov  4 16:05:49 2025
+ActionCompleted: Action 'directed/dirtest_16_0/execScript' passed at Tue Nov  4 16:05:49 2025
+ActionCompleted: Action 'directed/dirtest_22_0/execScript' passed at Tue Nov  4 16:05:49 2025
+ActionCompleted: Action 'directed/dirtest_19_0/execScript' passed at Tue Nov  4 16:05:49 2025
+ActionCompleted: Action 'directed/dirtest_21_0/execScript' passed at Tue Nov  4 16:05:49 2025
+ActionCompleted: Action 'directed/dirtest_20_0/execScript' passed at Tue Nov  4 16:05:49 2025
+Action script execution status:
+  Total 16 scripts prepared: 16 OK, 0 failed
+  Total 16 scripts launched: 16 OK, 0 failed
+  Total 16 scripts finished: 16 OK, 0 failed
+Action script completion status:
+  Total 16 execScript actions: 1 failed, 15 passed
+  Total  1 postScript actions: 1 empty
+  Total  1  preScript actions: 1 empty
+Test (valid UCDB) status:
+  Ok              14
+  Warning         1
+  Error           1
+  Fatal           0
+  Missing         0
+  Merge Error     0
+  Unknown Error   0
+  UCDB Error      0
+  TOTAL           16
+Action script pass/fail status:
+  Passed          15    (1 with Warnings)
+  Failed          1     (1 based on UCDB status)
+  TOTAL           16   
+RegressionCompleted: Regression finished at Tue Nov  4 16:05:55 2025
+VRM total elapsed time: 0m:21s
+\end{verbatim}
+
+Cette sortie montre l'exécution en parallèle de 16 tests dirigés avec vrun. On observe :
+\begin{itemize}
+    \item Démarrage simultané des 16 tests (exécution parallèle)
+    \item 15 tests passés avec succès
+    \item 1 test échoué (dirtest\_13\_0) avec statut UCDB Error
+    \item Temps d'exécution total : 21 secondes
+    \item Répartition des statuts : 14 OK, 1 Warning, 1 Error
+\end{itemize}
+
 \end{document}
