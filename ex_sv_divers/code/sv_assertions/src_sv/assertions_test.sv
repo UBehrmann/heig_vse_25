@@ -15,6 +15,17 @@ module assertions_test;
     default clocking cb @(posedge clk);
     endclocking
 
+    assert property(
+        @(posedge clk) disable iff (rst)
+        (req == 1) |=> ##[1:4] (ack == 1);
+    );
+
+    assert property (
+        @(posedge clk) disable iff (rst)
+        (a ##1 (a && b) ##1 (a && b)) |=> (c == 0) ##1 ##[0:3] (c == 1);
+    );
+
+
     task test_case1();
         $display("Let's start test 1");
         req <= 0;
