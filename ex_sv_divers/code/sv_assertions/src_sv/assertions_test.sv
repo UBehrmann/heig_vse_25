@@ -17,12 +17,12 @@ module assertions_test;
 
     assert property(
         @(posedge clk) disable iff (rst)
-        (req == 1) |=> ##[1:4] (ack == 1);
+        (req == 1) |=> ##[0:3] (ack == 1);
     );
 
     assert property (
         @(posedge clk) disable iff (rst)
-        (a ##1 (a && b) ##1 (a && b)) |=> (c == 0) ##1 ##[0:3] (c == 1);
+        (a ##1 (a && b)[*2]) |=> (c == 0) ##[1:4] (c == 1);
     );
 
 
