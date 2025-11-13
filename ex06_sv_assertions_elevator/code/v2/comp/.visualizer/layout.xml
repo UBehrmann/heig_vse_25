@@ -1,0 +1,16 @@
+<LayoutInfo version="1" CurrentRTLLayout="Default">
+ <Layout Type="RTL" Name="Default">
+  <dockareas top="0" right="450" bottom="156" left="300"/>
+  <taborder right="zinformalcontrolpointsnew+" bottom="transcript+zinformalproperties+" left="zindutview+"/>
+  <activetab right="zinformalcontrolpointsnew" bottom="zinformalproperties" left="zindutview" activewindow="zinformalcontrolpointsnew"/>
+  <window y="0" x="0" visible="1" type="transcript" dock_location="bottom" undocked="0"/>
+  <window y="0" x="0" visible="1" type="zinformalproperties" dock_location="bottom" title="Properties" undocked="0"/>
+  <window y="0" x="0" visible="1" type="zindutview" dock_location="left" title="Design - elevator_fsm_wrapper.duv.binded" undocked="0"/>
+  <window y="0" x="0" visible="1" type="zinformalcontrolpointsnew" dock_location="right" title="Control Points" undocked="0"/>
+  <window y="50" x="50" width="1200" height="800" visible="1" type="rtl" undocked="0"/>
+  <window y="27" x="0" width="1645" height="852" visible="0" type="wave" dock_location="bottom" title="Wave (duv.binded.a3_1)" undocked="1"/>
+  <window y="0" x="0" visible="0" type="source" dock_location="center" undocked="0"/>
+  <window y="0" x="0" visible="1" type="source" id="1" dock_location="center" undocked="0"/>
+  <window y="0" x="0" visible="0" type="zinformalpropertysummary" title="Property Summary" undocked="0"/>
+ </Layout>
+</LayoutInfo>

@@ -1,0 +1,3 @@
+-f /media/sf_share_folder/vse/heig_vse_25/ex06_sv_assertions_elevator/code/v2/comp/propcheck.db/FORMAL/SEARCH/SIM/vsim_tb_replay_top_modules.arg \
+-G ERRNO=0 \
+-voptargs="-assertdebug"

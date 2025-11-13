@@ -1,0 +1,5 @@
+set -e
+cd /media/sf_share_folder/vse/heig_vse_25/ex06_sv_assertions_elevator/code/v2/comp
+MODELSIM=/media/sf_share_folder/vse/heig_vse_25/ex06_sv_assertions_elevator/code/v2/comp/propcheck.db/tmp_aid_setup/aid_out/tmp_modelsim.ini \
+chmod +x /media/sf_share_folder/vse/heig_vse_25/ex06_sv_assertions_elevator/code/v2/comp/propcheck.db/tmp_aid_setup/aid_out/questa_compile.scr
+source /media/sf_share_folder/vse/heig_vse_25/ex06_sv_assertions_elevator/code/v2/comp/propcheck.db/tmp_aid_setup/aid_out/questa_compile.scr 

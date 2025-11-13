@@ -1,0 +1,67 @@
+<!-- THIS IS TOOL GENERATED SESSION FILE. PLEASE DO NOT MODIFY THIS -->
+<!DOCTYPE visualizer_session>
+<session version="0.2" featureversion="0.3">
+ <app argc="10">
+  <argv pos="0" value="/opt/mentor/questaformal/linux_x86_64/share/modeltech/linux_x86_64/../linux_x86_64/Visualizer/bin/hdlclient"/>
+  <argv pos="1" value="+designfile+/media/sf_share_folder/vse/heig_vse_25/ex06_sv_assertions_elevator/code/v2/comp/propcheck.db/VISUALIZER/design.bin"/>
+  <argv pos="2" value="+force_prompt+PropCheck> "/>
+  <argv pos="3" value="+force_title+PropCheck Starting..."/>
+  <argv pos="4" value="+show_pi_drvr_rcvr"/>
+  <argv pos="5" value="+max_drv_rec_cnt=10000"/>
+  <argv pos="6" value="+external_client"/>
+  <argv pos="7" value="+no_session"/>
+  <argv pos="8" value="+no_progress_bar"/>
+  <argv pos="9" value="+visformal"/>
+ </app>
+ <window_config>
+  <dockareas top="0" right="450" bottom="156" left="300"/>
+  <taborder right="zinformalcontrolpointsnew+" bottom="transcript+zinformalproperties+" left="zindutview+"/>
+  <activetab right="zinformalcontrolpointsnew" bottom="zinformalproperties" left="zindutview" activewindow="zinformalcontrolpointsnew"/>
+  <window y="0" x="0" visible="1" type="transcript" dock_location="bottom" undocked="0"/>
+  <window y="0" x="0" visible="1" type="zinformalproperties" dock_location="bottom" title="Properties" undocked="0"/>
+  <window y="0" x="0" visible="1" type="zindutview" dock_location="left" title="Design - elevator_fsm_wrapper.duv.binded" undocked="0"/>
+  <window y="0" x="0" visible="1" type="zinformalcontrolpointsnew" dock_location="right" title="Control Points" undocked="0"/>
+  <window y="50" x="50" width="1200" height="800" visible="1" type="rtl" undocked="0"/>
+  <window y="27" x="0" width="1645" height="852" visible="0" type="wave" dock_location="bottom" title="Wave (duv.binded.a3_1)" undocked="1"/>
+  <window y="0" x="0" visible="0" type="source" dock_location="center" undocked="0"/>
+  <window y="0" x="0" visible="1" type="source" id="1" dock_location="center" undocked="0"/>
+  <window y="0" x="0" visible="0" type="zinformalpropertysummary" title="Property Summary" undocked="0"/>
+ </window_config>
+ <wave_file_mgr>
+  <waveFile waveType="0" tagName="F2" fileName="/tmp/propcheck.8791_640/DesignConsts.db"/>
+ </wave_file_mgr>
+ <gui>
+  <main_window visible="1">
+   <srcbrowser value_tooltip_mode="true" value_annotation_mode="true" primary="true" instancename="elevator_fsm_wrapper"/>
+   <sourcetclcommands>
+    <tcl command="src activate source"/>
+    <tcl command="src top 1"/>
+   </sourcetclcommands>
+   <srcbrowser instancename="elevator_fsm_wrapper.duv.binded"/>
+   <sourcetclcommands>
+    <tcl command="src activate source1"/>
+    <tcl command="src top 36"/>
+   </sourcetclcommands>
+   <edge_gui cur_selection="AnyEdge"/>
+  </main_window>
+  <watchTower_cur_setting curRadix="8" customDisplayTimeUnitListStr="" curDisplayTimeUnit="-9" curActiveWaveFile="F2" curDisplayTimeUnitStr="1ns">
+   <curTime lowtime="0" hightime="0"/>
+  </watchTower_cur_setting>
+  <drv_rec_data drivers="true"/>
+  <transcript>
+   <window y="-656" x="-1700" width="1200" height="156"/>
+  </transcript>
+  <zinformalproperties>
+   <window y="589" x="0" width="1200" height="156"/>
+  </zinformalproperties>
+  <zindutview>
+   <window y="60" x="0" width="300" height="523"/>
+  </zindutview>
+  <zinformalcontrolpointsnew>
+   <window y="60" x="750" width="450" height="523"/>
+  </zinformalcontrolpointsnew>
+ </gui>
+ <wave_mgr sync_time_range="0"/>
+ <windows/>
+ <dut/>
+</session>

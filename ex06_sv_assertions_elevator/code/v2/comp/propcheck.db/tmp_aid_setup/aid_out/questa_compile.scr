@@ -1,0 +1,17 @@
+set -e
+
+#######################################################################################
+#                           Library mapping: VLIB Entries                             #
+#######################################################################################
+
+vlib /media/sf_share_folder/vse/heig_vse_25/ex06_sv_assertions_elevator/code/v2/comp/work
+
+#######################################################################################
+#                            Commands: VLOG/VCOM                                      #
+#######################################################################################
+
+cd /media/sf_share_folder/vse/heig_vse_25/ex06_sv_assertions_elevator/code/v2/comp
+vlog -mixedsvvh ../src_tb/elevator_fsm_assertions.sv ../src_tb/elevator_fsm_wrapper.sv 
+cd /media/sf_share_folder/vse/heig_vse_25/ex06_sv_assertions_elevator/code/v2/comp
+vcom -mixedsvvh ../src/elevator_fsm.vhd -work work -2008 
+
