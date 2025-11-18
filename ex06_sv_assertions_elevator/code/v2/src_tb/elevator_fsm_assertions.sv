@@ -34,17 +34,22 @@ module elevator_fsm_assertions#(int ERRNO = 0)(
         !(floor0_o && floor1_o)
     );
     // Assertion 3 : Door opening after arriving at a floor or requesting to open
-    a3 : assert property (
-        (!floor0_o ##1 floor0_o) |-> open_o[*10]
-    );
+    // Doors must be open to a maximum of 10 cycles after arriving at a floor
+    // If a !call0_i or !call1_i is received while the doors are open, the doors close immediately.
+    // This is the reason for haveing [*1:10] instead of [*10]
     a3_1 : assert property (
-        (!floor1_o ##1 floor1_o) |-> open_o[*10]
+        (!floor0_o ##1 floor0_o) |-> open_o[*1:10]
     );
+    a3_2 : assert property (
+        (!floor1_o ##1 floor1_o) |-> open_o[*1:10]
+    );        
     // Assertion 4 : Keep doors open when there is a call at the current floor
+    // After opening, doors must remain open until there is a close request arrives.
     a4 : assert property (
-        (floor0_o & call0_i) ^ (floor1_o & call1_i) |=> open_o[*10]
+        (floor0_o & call0_i) ^ (floor1_o & call1_i) |=> open_o[*1:10]
     );
     // Assertion 5 : Close doors when there is no call at the current floor
+    // Doors must close after 10 cycles if there are no calls at the current floor
     a5 : assert property (
         ((floor0_o & !call0_i) ^ (floor1_o & !call1_i))[*10] |=> !open_o
     );
