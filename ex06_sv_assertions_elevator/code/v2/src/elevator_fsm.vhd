@@ -85,6 +85,7 @@ begin
 
                 if call0_i then
                     n_state_s <= F0OPEN;
+                    n_counter_s <= 0;
                 elsif call1_i then
                     n_state_s <= F1ARRIVING;
                 end if;
@@ -119,6 +120,7 @@ begin
 
                 if call1_i then
                     n_state_s <= F1OPEN;
+                    n_counter_s <= 0;
                 elsif call0_i then
                     n_state_s <= F0ARRIVING;
                 end if;
