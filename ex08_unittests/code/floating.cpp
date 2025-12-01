@@ -8,6 +8,20 @@
 ///
 TEST(Floating, testRounding) {
     // Add your code here
+
+    float a = 0.1f + 0.2f;
+    float b = 0.3f;
+    
+    // I thought i should be 0.30000001 or something like that
+    // but actually this passes...
+    EXPECT_EQ(a, b) << "0.1 + 0.2 shouldn't be exactly equal to 0.3";
+
+    EXPECT_FLOAT_EQ(a, b) << "0.1 + 0.2 should be approximately equal to 0.3";
+    
+    float x = 1.0f / 3.0f;
+    float y = 0.333333333f;
+
+    EXPECT_FLOAT_EQ(x, y) << "1/3 should be approximately equal to 0.333333333";
 }
 
 ///
@@ -19,5 +33,24 @@ TEST(Floating, testRounding) {
 ///
 TEST(Floating, Loop) {
     // Add your code here
+
+    float sum1 = 0.0f;
+    float sum2 = 0.0f;
+
+    for (int i = 1; i <= 10; i++) {
+        sum1 += std::sqrt((float)(i));
+    }
+
+    sum1 /= 10.0f;
+
+    for (int i = 1; i <= 10; i++) {
+        sum2 += std::sqrt((float)(i)) / 10.0f;
+    }
+
+    ASSERT_EQ(sum1, sum2) << "Sum1 and Sum2 should be exactly equal";
+
+    ASSERT_FLOAT_EQ(sum1, sum2) << "Sum1 and Sum2 should be approximately equal";
+
+    // Both passes. I don't know why...
 }
 

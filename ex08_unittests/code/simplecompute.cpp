@@ -18,8 +18,13 @@ TEST(TestCompute, test16_2) {
 }
 
 TEST(TestCompute, test16_0) {
-    // Not that good
-    compute(16.0, 0);
+
+    double result = compute(16.0, 0);
+
+    // Quelque chose divisé par zéro, c'est infini
+    // Donc on vérifie que le résultat est bien infini
+
+    EXPECT_TRUE(std::isinf(result));
 }
 
 
