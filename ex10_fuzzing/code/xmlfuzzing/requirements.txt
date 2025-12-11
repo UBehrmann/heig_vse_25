@@ -1,2 +1,2 @@
 lxml
-git+https://github.com/sotalya/tucuxi-python.git@65edf2c8f3496a8f1b30ced9de9816c86340f9a1
+git+https://github.com/sotalya/tucuxi-python.git
