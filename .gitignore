@@ -19,3 +19,8 @@ transcript
 /labo1_sv_comb/code/scripts/work
 
 *tar.gz
+
+build/
+tmptqf/
+out_example/
+out_stack/

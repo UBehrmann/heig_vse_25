@@ -11,6 +11,7 @@ clang -g -O1 -fsanitize=fuzzer,memory                  mytarget.c # Builds the f
 */
 
 #include <iostream>
+#include <cstdint>
 
 std::size_t iteration = 0;
 

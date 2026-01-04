@@ -5,6 +5,6 @@ make
 # lcov --no-external --capture --initial --directory . --base-directory ../code --output-file report.info
 ./coverage_test
 # gcovr . -r ../code/ --html report.html
-lcov --no-external --capture --directory . --base-directory ../src --output-file report.info
+lcov --no-external --capture --directory . --base-directory ../src --output-file report.info --ignore-errors inconsistent
 genhtml report.info --output-directory=./html
 

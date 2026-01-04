@@ -1,2 +1,2 @@
-clang -g -O1 -fsanitize=fuzzer,address -DTEST1 -o testfuzzing testfuzzing.cpp 
+clang -g -O1 -fsanitize=fuzzer,address -DTEST3 -o testfuzzing3 testfuzzing.cpp 
 
